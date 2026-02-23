@@ -346,6 +346,8 @@
         }
         
         function updateAllViews() {
+            if (!appState.stats) return;
+            
             // Update everything on the page
             updateStreakDisplay();
             updateStatsDisplay();
