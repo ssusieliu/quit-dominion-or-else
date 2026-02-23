@@ -1,4 +1,4 @@
-ame: Check Dominion Games
+name: Check Dominion Games
 
 on:
   schedule:
@@ -28,9 +28,9 @@ jobs:
       env:
         DOMINION_USERNAME: ${{ secrets.DOMINION_USERNAME }}
         DOMINION_PASSWORD: ${{ secrets.DOMINION_PASSWORD }}
-        TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
-        TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
-        TWILIO_PHONE_NUMBER: ${{ secrets.TWILIO_PHONE_NUMBER }}
+        # TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+        # TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+        # TWILIO_PHONE_NUMBER: ${{ secrets.TWILIO_PHONE_NUMBER }}
       run: python scripts/check_dominion.py
       
     - name: Commit updated data
