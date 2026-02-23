@@ -1,0 +1,23 @@
+{
+  "name": "quit-dominion-or-else",
+  "version": "1.0.0",
+  "description": "Simple web app to help me quit playing Dominion",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ssusieliu/quit-dominion-or-else.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ssusieliu/quit-dominion-or-else/issues"
+  },
+  "homepage": "https://github.com/ssusieliu/quit-dominion-or-else#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.3.0"
+  }
+}
