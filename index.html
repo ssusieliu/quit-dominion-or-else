@@ -148,7 +148,7 @@
             
             try {
                 // Load stats
-                const statsUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/data/stats.json`;
+                const statsUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/data/dominion_play_stats.json`;
                 console.log('Fetching stats from:', statsUrl);
                 
                 const statsResponse = await fetch(statsUrl);
