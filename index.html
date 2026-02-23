@@ -161,19 +161,19 @@
                 stats = await statsResponse.json();
                 console.log('Stats loaded:', stats);
                 
-                // Load phone numbers
-                const phoneUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/data/phone_numbers.json`;
-                console.log('Fetching phone numbers from:', phoneUrl);
+                // // Load phone numbers
+                // const phoneUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/data/phone_numbers.json`;
+                // console.log('Fetching phone numbers from:', phoneUrl);
                 
-                const phoneResponse = await fetch(phoneUrl);
-                console.log('Phone response status:', phoneResponse.status);
+                // const phoneResponse = await fetch(phoneUrl);
+                // console.log('Phone response status:', phoneResponse.status);
                 
-                if (!phoneResponse.ok) {
-                    throw new Error(`Failed to fetch phone numbers: ${phoneResponse.status} ${phoneResponse.statusText}`);
-                }
+                // if (!phoneResponse.ok) {
+                //     throw new Error(`Failed to fetch phone numbers: ${phoneResponse.status} ${phoneResponse.statusText}`);
+                // }
                 
-                phoneNumbers = await phoneResponse.json();
-                console.log('Phone numbers loaded:', phoneNumbers);
+                // phoneNumbers = await phoneResponse.json();
+                // console.log('Phone numbers loaded:', phoneNumbers);
                 
                 // Update the UI
                 updateUI();
