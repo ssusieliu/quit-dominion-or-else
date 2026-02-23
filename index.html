@@ -277,7 +277,7 @@
             // Load both stats and phone numbers
             try {
                 appState.stats = await fetchStatsFromGitHub();
-                appState.phoneNumbers = await fetchPhoneNumbersFromGitHub();
+                // appState.phoneNumbers = await fetchPhoneNumbersFromGitHub();
                 appState.isLoading = false;
                 return true;
             } catch (error) {
