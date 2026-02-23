@@ -407,15 +407,14 @@
            ============================================ */
         
         // When the page loads, start the app
-        document.addEventListener('DOMContentLoaded', () => {
-            // Initial load
-            handlePageLoad();
-            
-            // Set up form submission handler
-            document.getElementById('phoneForm').addEventListener('submit', handleFormSubmit);
-            
-            // Refresh data every 30 seconds
-            setInterval(handlePeriodicRefresh, 30000);
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                await loadData();     // Wait for data
+                updateView();         // Then update UI
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('loading').textContent = 'Error loading data';
+            }
         });
     </script>
 </body>
