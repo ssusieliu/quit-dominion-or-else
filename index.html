@@ -409,8 +409,8 @@
         // When the page loads, start the app
         document.addEventListener('DOMContentLoaded', async () => {
             try {
-                await loadData();     // Wait for data
-                updateView();         // Then update UI
+                await loadAllData();     // Wait for data
+                updateAllViews();         // Then update UI
             } catch (error) {
                 console.error('Error:', error);
                 document.getElementById('loading').textContent = 'Error loading data';
