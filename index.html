@@ -296,6 +296,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM ready, starting load...');
             loadData();
+
+            document.getElementById('signupForm').addEventListener('submit', handleSignup);
         });
         
         // Refresh every 30 seconds
