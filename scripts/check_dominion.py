@@ -116,7 +116,7 @@ def send_sms_alerts(phone_numbers, game_count, time_since_last):
         print("WARNING: Twilio credentials not configured, skipping SMS")
         return
     
-    message = f"🚨 DOMINION STREAK BROKEN! 🚨\n\nStreak duration: {time_since_last}\nTotal games: {game_count}\n\nYou are owed $10!"
+    message = f"🚨 Susie played Dominion again :( 🚨\n\nStreak duration: {time_since_last}\nTotal games: {game_count}\n\n Please contact Susie to receive your coffee/beer/$10"
     
     for phone_number in phone_numbers:
         try:
@@ -180,11 +180,11 @@ def main():
         else:
             time_since_last = "Unknown (first check)"
         
-        # # Send alerts
-        # if phone_numbers:
-        #     send_sms_alerts(phone_numbers, current_game_count, time_since_last)
-        # else:
-        #     print("No phone numbers registered for alerts")
+        # Send alerts
+        if phone_numbers:
+            send_sms_alerts(phone_numbers, current_game_count, time_since_last)
+        else:
+            print("No phone numbers registered for alerts")
         
         # Update last played timestamp
         stats['last_played_timestamp'] = current_time
