@@ -1,4 +1,4 @@
-// netlify/functions/add_contact.js
+// netlify/functions/add-contact.js
 // Backend API to encrypt and save phone numbers
 
 const crypto = require('crypto');
@@ -12,7 +12,28 @@ function encrypt(text, key) {
   return iv.toString('base64') + ':' + encrypted;
 }
 
-async function addPhoneToGitHub(encryptedPhone, name) {
+// Decrypt function
+function decrypt(encryptedText, key) {
+  try {
+    const parts = encryptedText.split(':');
+    if (parts.length !== 2) {
+      throw new Error('Invalid encrypted format');
+    }
+    
+    const iv = Buffer.from(parts[0], 'base64');
+    const encrypted = parts[1];
+    const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key, 'base64'), iv);
+    
+    let decrypted = decipher.update(encrypted, 'base64', 'utf8');
+    decrypted += decipher.final('utf8');
+    return decrypted;
+  } catch (error) {
+    console.error('Decryption error:', error);
+    return null;
+  }
+}
+
+async function addPhoneToGitHub(encryptedPhone, phoneNumber, name, encryptionKey) {
   const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
   const GITHUB_USER = process.env.GITHUB_USER;
   const GITHUB_REPO = process.env.GITHUB_REPO;
@@ -33,25 +54,63 @@ async function addPhoneToGitHub(encryptedPhone, name) {
   
   let currentData = [];
   let sha = null;
+  let isUpdate = false;
+  let updatedIndex = -1;
   
   if (getResponse.ok) {
     const fileData = await getResponse.json();
     sha = fileData.sha;
     const content = Buffer.from(fileData.content, 'base64').toString('utf8');
     currentData = JSON.parse(content);
+    
+    // Check for duplicates by decrypting existing numbers
+    console.log(`Checking ${currentData.length} existing entries for duplicates...`);
+    
+    for (let i = 0; i < currentData.length; i++) {
+      const entry = currentData[i];
+      
+      // Handle both old format (just string) and new format (object)
+      const encryptedValue = typeof entry === 'string' ? entry : entry.encrypted;
+      
+      if (encryptedValue) {
+        const decryptedPhone = decrypt(encryptedValue, encryptionKey);
+        
+        if (decryptedPhone === phoneNumber) {
+          console.log(`Found duplicate at index ${i}, updating entry...`);
+          isUpdate = true;
+          updatedIndex = i;
+          
+          // Update the existing entry
+          currentData[i] = {
+            encrypted: encryptedPhone,
+            name: name,
+            added: typeof entry === 'object' && entry.added ? entry.added : new Date().toISOString(),
+            updated: new Date().toISOString()
+          };
+          break;
+        }
+      }
+    }
   }
   
-  // Add new encrypted phone
-  currentData.push({
-    encrypted: encryptedPhone,
-    name: name,
-    added: new Date().toISOString()
-  });
+  // If not a duplicate, add new entry
+  if (!isUpdate) {
+    console.log('No duplicate found, adding new entry...');
+    currentData.push({
+      encrypted: encryptedPhone,
+      name: name,
+      added: new Date().toISOString()
+    });
+  }
   
   // Update file on GitHub
   const newContent = Buffer.from(JSON.stringify(currentData, null, 2)).toString('base64');
   
   const updateUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/data/phone_numbers.json`;
+  
+  const commitMessage = isUpdate 
+    ? `Update phone number entry for ${name} (was duplicate)`
+    : `Add phone number for ${name}`;
   
   const updateResponse = await fetch(updateUrl, {
     method: 'PUT',
@@ -61,7 +120,7 @@ async function addPhoneToGitHub(encryptedPhone, name) {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      message: `Add phone number for ${name}`,
+      message: commitMessage,
       content: newContent,
       sha: sha
     })
@@ -72,10 +131,10 @@ async function addPhoneToGitHub(encryptedPhone, name) {
     throw new Error(`GitHub update failed: ${error}`);
   }
   
-  return true;
+  return { isUpdate, updatedIndex };
 }
 
-async function sendConfirmationSMS(phoneNumber, name) {
+async function sendConfirmationSMS(phoneNumber, name, isUpdate) {
   const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID;
   const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN;
   const TWILIO_PHONE_NUMBER = process.env.TWILIO_PHONE_NUMBER;
@@ -85,7 +144,9 @@ async function sendConfirmationSMS(phoneNumber, name) {
     return false;
   }
   
-  const message = `Hi ${name}! Welcome to the Quit Dominion or Else community!`;
+  const message = isUpdate
+    ? `Hi ${name}! Your info has been updated in the Quit Dominion or Else database.`
+    : `Hi ${name}! Welcome to the Quit Dominion or Else community!`;
   
   const url = `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_ACCOUNT_SID}/Messages.json`;
   
@@ -172,12 +233,12 @@ exports.handler = async (event, context) => {
     const encryptedPhone = encrypt(phoneNumber, ENCRYPTION_KEY);
     console.log('Phone encrypted');
     
-    // Add to GitHub
-    await addPhoneToGitHub(encryptedPhone, name);
-    console.log('Added to GitHub');
+    // Add to GitHub (checks for duplicates internally)
+    const { isUpdate, updatedIndex } = await addPhoneToGitHub(encryptedPhone, phoneNumber, name, ENCRYPTION_KEY);
+    console.log(isUpdate ? `Updated existing entry at index ${updatedIndex}` : 'Added new entry');
     
     // Send confirmation SMS
-    const smsSent = await sendConfirmationSMS(phoneNumber, name);
+    const smsSent = await sendConfirmationSMS(phoneNumber, name, isUpdate);
     console.log('SMS sent:', smsSent);
     
     return {
@@ -185,7 +246,8 @@ exports.handler = async (event, context) => {
       headers,
       body: JSON.stringify({ 
         success: true,
-        message: 'Successfully added to alert list!',
+        message: isUpdate ? 'Successfully updated your info!' : 'Successfully added to alert list!',
+        isUpdate,
         smsSent
       })
     };
