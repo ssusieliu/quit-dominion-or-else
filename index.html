@@ -68,7 +68,6 @@
         // ============================================
         // CONFIGURATION - CHANGE THIS TO YOUR USERNAME
         // ============================================
-        const GITHUB_USER = 'ssusieliu';
         const GITHUB_REPO = 'quit-dominion-or-else';
         const GITHUB_BRANCH = 'main';
 
@@ -138,17 +137,9 @@
         }
 
         async function loadData() {
-            console.log('Starting data load...');
-            console.log('GitHub User:', GITHUB_USER);
-            
-            if (GITHUB_USER === 'YOUR_USERNAME') {
-                showError('Please update GITHUB_USER in the HTML file with your actual GitHub username!');
-                return;
-            }
-            
             try {
                 // Load stats
-                const statsUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/data/dominion_play_stats.json`;
+                const statsUrl = `https://raw.githubusercontent.com/ssusieliu/${GITHUB_REPO}/${GITHUB_BRANCH}/data/dominion_play_stats.json`;
                 console.log('Fetching stats from:', statsUrl);
                 
                 const statsResponse = await fetch(statsUrl);
@@ -161,19 +152,19 @@
                 stats = await statsResponse.json();
                 console.log('Stats loaded:', stats);
                 
-                // // Load phone numbers
-                // const phoneUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/data/phone_numbers.json`;
-                // console.log('Fetching phone numbers from:', phoneUrl);
+                // Load phone numbers
+                const phoneUrl = `https://raw.githubusercontent.com/ssusieliu/${GITHUB_REPO}/${GITHUB_BRANCH}/data/phone_numbers.json`;
+                console.log('Fetching phone numbers from:', phoneUrl);
                 
-                // const phoneResponse = await fetch(phoneUrl);
-                // console.log('Phone response status:', phoneResponse.status);
+                const phoneResponse = await fetch(phoneUrl);
+                console.log('Phone response status:', phoneResponse.status);
                 
-                // if (!phoneResponse.ok) {
-                //     throw new Error(`Failed to fetch phone numbers: ${phoneResponse.status} ${phoneResponse.statusText}`);
-                // }
+                if (!phoneResponse.ok) {
+                    throw new Error(`Failed to fetch phone numbers: ${phoneResponse.status} ${phoneResponse.statusText}`);
+                }
                 
-                // phoneNumbers = await phoneResponse.json();
-                // console.log('Phone numbers loaded:', phoneNumbers);
+                phoneNumbers = await phoneResponse.json();
+                console.log('Phone numbers loaded:', phoneNumbers);
                 
                 // Update the UI
                 updateUI();
