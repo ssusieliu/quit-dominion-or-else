@@ -1,5 +1,3 @@
-cat > .netlify-ignore << 'EOF'
 requirements.txt
 scripts/
 *.py
-EOF
