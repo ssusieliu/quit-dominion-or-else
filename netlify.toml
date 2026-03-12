@@ -1,13 +1,7 @@
+
 [build]
   publish = "."
-  command = "# No build needed"
-  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF ."
-
-[build.environment]
-  PYTHON_VERSION = "3.8"
-  
-[functions]
-  directory = "netlify/functions"
+  functions = "netlify/functions"
 
 [[redirects]]
   from = "/api/*"
