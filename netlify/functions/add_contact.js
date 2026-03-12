@@ -1,4 +1,4 @@
-// netlify/functions/add-phone.js
+// netlify/functions/add_contact.js
 // Backend API to encrypt and save phone numbers
 
 const crypto = require('crypto');
@@ -85,7 +85,7 @@ async function sendConfirmationSMS(phoneNumber, name) {
     return false;
   }
   
-  const message = `Hi ${name}! Welcome to the Quit Dominion or Else community! If Susie breaks her streak of not playing Dominion, you will be notified, and she will owe you a coffee/beer/something else worth up to $10. Thank you for your participation 🎯`;
+  const message = `Hi ${name}! Welcome to the Quit Dominion or Else community! If Susie plays Dominion, you will be notified, and she will owe you something worth up to $10. Thank you for your participation 🎯`;
   
   const url = `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_ACCOUNT_SID}/Messages.json`;
   
