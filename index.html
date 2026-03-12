@@ -59,8 +59,58 @@
         <div class="card">
             <h2>Stats</h2>
             <p><strong>Total Games:</strong> <span id="totalGames">-</span></p>
-            <p><strong>Accountability Partners:</strong> <span id="partnerCount">-</span></p>
+            <p><strong># of people signed up to receive $10 from Susie if she plays Dominion:</strong> <span id="partnerCount">-</span></p>
+            <p><strong>$ Susie will owe: $</strong> <span id="potAmount">-</span></p>
             <p><small id="lastUpdated">Last checked: -</small></p>
+        </div>
+    </div>
+
+    <div class="card">
+            <h2>📱 Join the community</h2>
+            <p style="color: #666; margin-bottom: 20px;">
+                What does "or else" mean? If I play Dominion again, I owe you $10. To sign up to receive $10 if I succumb and play Dominion again, fill out the form below!
+            </p>
+            
+            <div id="formError" class="error" style="display: none;"></div>
+            <div id="formSuccess" style="display: none; background: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                ✅ Success! Check your phone for a confirmation message.
+            </div>
+            
+            <form id="signupForm">
+                <div style="margin-bottom: 15px;">
+                    <label for="nameInput" style="display: block; margin-bottom: 5px; font-weight: 600;">Your Name</label>
+                    <input 
+                        type="text" 
+                        id="nameInput" 
+                        placeholder="John Doe"
+                        required
+                        style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; font-size: 1rem;"
+                    >
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label for="phoneInput" style="display: block; margin-bottom: 5px; font-weight: 600;">Phone Number</label>
+                    <input 
+                        type="tel" 
+                        id="phoneInput" 
+                        placeholder="+1234567890"
+                        required
+                        pattern="^\+[1-9]\d{1,14}$"
+                        style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; font-size: 1rem;"
+                    >
+                    <small style="color: #666; display: block; margin-top: 5px;">
+                        Include country code (e.g., +1 for US, +44 for UK)
+                    </small>
+                </div>
+                
+                <button 
+                    type="submit" 
+                    id="submitBtn"
+                    style="width: 100%; background: #667eea; color: white; border: none; padding: 12px; font-size: 1rem; font-weight: 600; border-radius: 5px; cursor: pointer;"
+                >
+                    Sign Me Up!
+                </button>
+            </form>
         </div>
     </div>
 
@@ -124,7 +174,13 @@
             
             // Update stats
             document.getElementById('totalGames').textContent = stats.last_game_count || 0;
-            document.getElementById('partnerCount').textContent = phoneNumbers.length;
+            
+            let count = 0;
+            if (Array.isArray(phoneNumbers)) {
+                count = phoneNumbers.length;
+            }
+            document.getElementById('partnerCount').textContent = count;
+            document.getElementById('potAmount').textContent = count * 10;
             
             // Update timestamp
             if (stats.last_check_timestamp) {
@@ -172,6 +228,67 @@
             } catch (error) {
                 console.error('Error details:', error);
                 showError(`Error loading data: ${error.message}. Check console for details.`);
+            }
+        }
+
+        // Handle form submission
+        async function handleSignup(event) {
+            event.preventDefault();
+            
+            const nameInput = document.getElementById('nameInput');
+            const phoneInput = document.getElementById('phoneInput');
+            const submitBtn = document.getElementById('submitBtn');
+            const formError = document.getElementById('formError');
+            const formSuccess = document.getElementById('formSuccess');
+            
+            // Hide previous messages
+            formError.style.display = 'none';
+            formSuccess.style.display = 'none';
+            
+            // Validate phone format
+            const phoneRegex = /^\+[1-9]\d{1,14}$/;
+            if (!phoneRegex.test(phoneInput.value)) {
+                formError.textContent = 'Invalid phone number format. Must start with + and include country code (e.g., +1234567890)';
+                formError.style.display = 'block';
+                return;
+            }
+            
+            // Disable form while submitting
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Signing Up...';
+            
+            try {
+                const response = await fetch('/api/add-phone', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: nameInput.value,
+                        phoneNumber: phoneInput.value
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    formSuccess.style.display = 'block';
+                    nameInput.value = '';
+                    phoneInput.value = '';
+                    
+                    // Reload data to update count
+                    setTimeout(() => loadData(), 2000);
+                } else {
+                    formError.textContent = result.error || 'Failed to sign up. Please try again.';
+                    formError.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Signup error:', error);
+                formError.textContent = 'Network error. Please check your connection and try again.';
+                formError.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Sign Me Up!';
             }
         }
 
