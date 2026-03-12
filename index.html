@@ -258,7 +258,7 @@
             submitBtn.textContent = 'Signing Up...';
             
             try {
-                const response = await fetch('/api/add-contact', {
+                const response = await fetch('https://quitdominionorelse.netlify.app/api/add-contact', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
