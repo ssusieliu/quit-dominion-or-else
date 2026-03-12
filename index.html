@@ -194,11 +194,13 @@
 
         async function loadData() {
             try {
+                const timestamp = new Date().getTime();
+
                 // Load stats
-                const statsUrl = `https://raw.githubusercontent.com/ssusieliu/${GITHUB_REPO}/${GITHUB_BRANCH}/data/dominion_play_stats.json`;
+                const statsUrl = `https://raw.githubusercontent.com/ssusieliu/${GITHUB_REPO}/${GITHUB_BRANCH}/data/dominion_play_stats.json?t=${timestamp}`;
                 console.log('Fetching stats from:', statsUrl);
                 
-                const statsResponse = await fetch(statsUrl);
+                const statsResponse = await fetch(statsUrl, { cache: 'no-store' });
                 console.log('Stats response status:', statsResponse.status);
                 
                 if (!statsResponse.ok) {
@@ -209,10 +211,10 @@
                 console.log('Stats loaded:', stats);
                 
                 // Load phone numbers
-                const phoneUrl = `https://raw.githubusercontent.com/ssusieliu/${GITHUB_REPO}/${GITHUB_BRANCH}/data/phone_numbers.json`;
+                const phoneUrl = `https://raw.githubusercontent.com/ssusieliu/${GITHUB_REPO}/${GITHUB_BRANCH}/data/phone_numbers.json?t=${timestamp}`;
                 console.log('Fetching phone numbers from:', phoneUrl);
                 
-                const phoneResponse = await fetch(phoneUrl);
+                const phoneResponse = await fetch(phoneUrl, { cache: 'no-store' });
                 console.log('Phone response status:', phoneResponse.status);
                 
                 if (!phoneResponse.ok) {
