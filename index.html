@@ -10,7 +10,13 @@
             max-width: 800px;
             margin: 50px auto;
             padding: 20px;
-            background: #f5f5f5;
+
+            background-image: url('images/burning_flame.gif');
+            background-position: bottom center;
+            background-repeat: repeat-x;  /* Tile horizontally if too narrow */
+            background-size: auto 100%;    /* Full height, auto width */
+            background-attachment: fixed;  /* Keep it fixed while scrolling */
+            background-color: black;       /* Black for empty space above */
         }
         .card {
             background: white;
