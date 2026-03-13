@@ -1,6 +1,7 @@
 import os
 import json
-from datetime import datetime, timezone
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 import requests
@@ -8,6 +9,7 @@ import requests
 DATA_DIR = Path("data")
 STATS_FILE = DATA_DIR / "dominion_play_stats.json"
 PHONE_NUMBERS_FILE = DATA_DIR / "contact_list.json"
+TIME_ZONE = ZoneInfo("America/Toronto")
 
 def load_data():
     """Load previous stats and phone numbers"""
@@ -150,7 +152,7 @@ def format_time_duration(seconds):
         return f"{days} day{'s' if days != 1 else ''}"
 
 def main():
-    print(f"Running check at {datetime.now(timezone.utc).isoformat()}")
+    print(f"Running check at {datetime.now(TIME_ZONE).isoformat()}")
     
     # Load previous data
     stats, phone_numbers = load_data()
@@ -162,7 +164,7 @@ def main():
         print("Failed to get game count, skipping this check")
         return
     
-    current_time = datetime.now(timezone.utc).isoformat()
+    current_time = datetime.now(TIME_ZONE).isoformat()
     previous_game_count = stats['last_game_count']
     
     print(f"Previous game count: {previous_game_count}")
@@ -175,7 +177,7 @@ def main():
         # Calculate time since last played
         if stats['last_played_timestamp']:
             last_played = datetime.fromisoformat(stats['last_played_timestamp'])
-            time_diff = datetime.now(timezone.utc) - last_played
+            time_diff = datetime.now(TIME_ZONE) - last_played
             time_since_last = format_time_duration(int(time_diff.total_seconds()))
         else:
             time_since_last = "Unknown (first check)"
