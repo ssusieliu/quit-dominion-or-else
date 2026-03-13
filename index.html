@@ -11,22 +11,22 @@
             font-weight: normal;
             font-style: normal;
         }
-
-        .page-title {
+        @font-face {
+            font-family: 'Arial';
+            src: url('fonts/Arial.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        h2 {
             font-family: 'FrostScream', Arial, sans-serif;
-            color: white;
-            font-size: 3rem;
-            text-align: center;
-            margin-bottom: 30px;
+            color: #200000;  /* Dark red */
+            font-size: 2.4rem;  /* Smaller than the main title (which is 3rem) */
             text-shadow: 
-                0 0 10px #8B0000,
-                0 0 20px #8B0000,
-                0 0 30px #8B0000,
-                0 0 40px #8B0000;
-            letter-spacing: 2px;
+                0 0 5px #3f0303,
+                0 0 10px #660000;  /* Subtle dark red glow */
         }
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             max-width: 800px;
             margin: 50px auto;
             padding: 20px;
@@ -38,18 +38,41 @@
             background-attachment: fixed;  /* Keep it fixed while scrolling */
             background-color: black;       /* Black for empty space above */
         }
+
+        .page-title {
+            font-family: 'FrostScream', Arial, sans-serif;
+            color: rgb(236, 219, 209);
+            font-size: 4rem;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 
+                0 0 10px #8B0000,
+                0 0 20px #8B0000,
+                0 0 30px #8B0000,
+                0 0 40px #8B0000;
+            letter-spacing: 2px;
+        }
         .card {
-            background: white;
+            background: rgb(227, 220, 219);
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px #3f0303,
+                        0 4px 20px #660000;  /* Stronger dark red shadow */
             margin-bottom: 20px;
         }
+        .card h2 {
+            margin-top: 5px;
+            margin-bottom: 0;  /* Keep some space below */
+        }   
         .big-number {
-            font-size: 4rem;
-            color: #667eea;
+            font-family: FrostScream, Arial, sans-serif;
+            font-size: 6rem;
+            color: #200000;
             text-align: center;
             margin: 20px 0;
+            text-shadow: 
+            0 0 5px #3f0303,
+            0 0 10px #660000;  /* Subtle dark red glow */
         }
         .loading {
             text-align: center;
@@ -67,6 +90,61 @@
         #content {
             display: none;
         }
+
+        /* Remove default margins and add consistent spacing */
+        label {
+            display: block;
+            margin-bottom: 8px;
+            margin-top: 0;  /* Remove top margin */
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgb(189, 183, 182);
+            border-radius: 5px;
+            font-size: 1rem;
+            margin-bottom: 5px;  /* Space before the <small> */
+            box-sizing: border-box;
+        }
+
+        small {
+            display: block;
+            margin-top: 5px;
+            margin-bottom: 0;  /* Remove bottom margin */
+            color: #666;
+        }
+
+        /* Consistent spacing between form groups */
+        .form-group,
+        div[style*="margin-bottom"] {
+            margin-bottom: 20px;
+        }
+
+        /* Last form group shouldn't have bottom margin */
+        .form-group:last-of-type,
+        div[style*="margin-bottom"]:last-of-type {
+            margin-bottom: 0;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            background: #560505;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button[type="submit"]:hover {
+            background: #5568d3;
+        }
     </style>
 </head>
 <body>
@@ -78,65 +156,57 @@
     
     <div id="content">
         <div class="card">
-            <p>Time Since Last Game</p>
-            <div class="big-number" id="streakValue">-</div>
-            <div id="streakUnit" style="text-align: center; font-size: 1.5rem; color: #666;">-</div>
+            <h2>Susie hasn't played Dominion for...</h2>
+            <div class="big-number" id="streakDisplay">-</div>
         </div>
         
         <div class="card">
-            <h2>Stats</h2>
-            <p><strong>Total Games:</strong> <span id="totalGames">-</span></p>
-            <p><strong># of people signed up to receive $10 from Susie if she plays Dominion:</strong> <span id="partnerCount">-</span></p>
-            <p><strong>$ Susie will owe: $</strong> <span id="potAmount">-</span></p>
+            <h2>The current stakes...</h2>
+            <p><strong>Number of games Susie has played...</strong> <span id="totalGames">-</span></p>
+            <p><strong>Number of people signed up to receive $10 from Susie if she plays Dominion...</strong> <span id="partnerCount">-</span></p>
+            <p><strong>Money Susie owes if she succumbs... $</strong> <span id="potAmount">-</span></p>
             <p><small id="lastUpdated">Last checked: -</small></p>
         </div>
     </div>
 
     <div class="card">
-            <h2>📱 Join the community</h2>
-            <p style="color: #666; margin-bottom: 20px;">
-                What does "or else" mean? If I play Dominion again, I owe you $10. To sign up to receive $10 if I succumb and play Dominion again, fill out the form below!
+            <h2>👹 Help Susie...</h2>
+            <p style="color: #000000; margin-bottom: 20px;">
+                What does "Or Else" mean? Susie owes a coffee/ beer/ something worth up to $10 to everyone who signs up here if she plays Dominion again.
+            </p>
+            <p>
+                Fill out the the form below to participate in this amazing offer...
             </p>
             
             <div id="formError" class="error" style="display: none;"></div>
             <div id="formSuccess" style="display: none; background: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
-                ✅ Success! Check your phone for a confirmation message.
+                ✅ Thank you for helping Susie... Check your phone for a confirmation message...
             </div>
             
             <form id="signupForm">
-                <div style="margin-bottom: 15px;">
-                    <label for="nameInput" style="display: block; margin-bottom: 5px; font-weight: 600;">Your Name</label>
+                <div class="form-group">
+                    <label for="nameInput">Your Name</label>
                     <input 
                         type="text" 
                         id="nameInput" 
-                        placeholder="John Doe"
+                        placeholder="Guy Fieri"
                         required
-                        style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; font-size: 1rem;"
                     >
                 </div>
                 
-                <div style="margin-bottom: 15px;">
-                    <label for="phoneInput" style="display: block; margin-bottom: 5px; font-weight: 600;">Phone Number</label>
+                <div class="form-group">
+                    <label for="phoneInput">Phone Number</label>
                     <input 
                         type="tel" 
                         id="phoneInput" 
                         placeholder="+1234567890"
                         required
                         pattern="^\+[1-9]\d{1,14}$"
-                        style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; font-size: 1rem;"
                     >
-                    <small style="color: #666; display: block; margin-top: 5px;">
-                        Include country code (e.g., +1 for US, +44 for UK)
-                    </small>
+                    <small>Include country code (e.g., +1 for US, +44 for UK)</small>
                 </div>
                 
-                <button 
-                    type="submit" 
-                    id="submitBtn"
-                    style="width: 100%; background: #667eea; color: white; border: none; padding: 12px; font-size: 1rem; font-weight: 600; border-radius: 5px; cursor: pointer;"
-                >
-                    Sign Me Up!
-                </button>
+                <button type="submit" id="submitBtn">Sign Me Up!</button>
             </form>
         </div>
     </div>
@@ -196,8 +266,7 @@
             
             // Update streak
             const streak = calculateStreak();
-            document.getElementById('streakValue').textContent = streak.value;
-            document.getElementById('streakUnit').textContent = streak.unit;
+            document.getElementById('streakDisplay').textContent = `${streak.value} ${streak.unit}`;
             
             // Update stats
             document.getElementById('totalGames').textContent = stats.last_game_count || 0;

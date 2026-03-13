@@ -146,7 +146,7 @@ async function sendConfirmationSMS(phoneNumber, name, isUpdate) {
   
   const message = isUpdate
     ? `Hi ${name}! Your info has been updated in the Quit Dominion Or Else database.`
-    : `Hi ${name}! Welcome to the Quit Dominion Or Else community. Your help is greatly appreciated. Let's pray Susie never plays Dominion again.`;
+    : `Hi ${name}! Your help is greatly appreciated. Let's all pray that Susie never plays Dominion again.`;
   
   const url = `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_ACCOUNT_SID}/Messages.json`;
   
