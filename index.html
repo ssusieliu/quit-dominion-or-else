@@ -5,6 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quit Dominion Or Else</title>
     <style>
+        @font-face {
+            font-family: 'FrostScream';
+            src: url('fonts/frost_scream.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        .page-title {
+            font-family: 'FrostScream', Arial, sans-serif;
+            color: white;
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 
+                0 0 10px #8B0000,
+                0 0 20px #8B0000,
+                0 0 30px #8B0000,
+                0 0 40px #8B0000;
+            letter-spacing: 2px;
+        }
         body {
             font-family: Arial, sans-serif;
             max-width: 800px;
@@ -53,10 +73,11 @@
     <div id="loading" class="loading">Loading streak data...</div>
     
     <div id="error" class="error" style="display: none;"></div>
+
+    <h1 class="page-title">QUIT DOMINION OR ELSE</h1>
     
     <div id="content">
         <div class="card">
-            <h1>Quit Dominion Or Else 🔥</h1>
             <p>Time Since Last Game</p>
             <div class="big-number" id="streakValue">-</div>
             <div id="streakUnit" style="text-align: center; font-size: 1.5rem; color: #666;">-</div>
